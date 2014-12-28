@@ -1,7 +1,6 @@
-puts "Let ord(m,b,k) be the length between the first two repeated terms in"
-puts "the sequence given by a_n=(k*b^n mod m).\n"
-
 (83..100).each do |m|
+  cycles = []
+  lengths = []
   (2..23).each do |b|
     (1..m-1).each do |k|
       arr = [k % m]
@@ -10,8 +9,25 @@ puts "the sequence given by a_n=(k*b^n mod m).\n"
         arr << candidate
         candidate = candidate * b % m
       end
-      puts "ord(#{m},#{b},#{k})=#{arr.length-arr.index(candidate)}"
-      puts "     #{arr+[candidate]}\n"
+      length = arr.length-arr.index(candidate)
+      unless lengths.include? length
+        lengths << length
+        cycles << {
+          b: b,
+          k: k,
+          length: arr.length-arr.index(candidate),
+          arr: arr
+        }
+      end
     end
   end
+  puts "Using modulus m=#{m}:"
+  puts
+  cycles.each do |cycle|
+    puts "For starting number k=#{cycle[:k]} and multiple b=#{cycle[:b]}:"
+    puts "  Cycle length: #{cycle[:length]}"
+    puts "  Array: #{cycle[:arr]}"
+    puts
+  end
+  puts
 end
